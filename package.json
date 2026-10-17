@@ -1,0 +1,69 @@
+{
+  "name": "reasoning-lab-lite",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Reasoning Lab (lite): think first, compare second — practice app with rule-checked answers and quoted explanation comparison. No external AI or auth services.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.18"
+  },
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "typecheck": "tsc --noEmit",
+    "setup:env": "node scripts/setup-env.mjs",
+    "setup:local": "node scripts/setup-env.mjs && node scripts/local-db.mjs start && tsx scripts/migrate.ts && tsx scripts/seed.ts",
+    "db:local:start": "node scripts/local-db.mjs start",
+    "db:local:stop": "node scripts/local-db.mjs stop",
+    "db:local:status": "node scripts/local-db.mjs status",
+    "db:local:reset": "node scripts/local-db.mjs reset",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "db:seed": "tsx scripts/seed.ts",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "verify": "npm run typecheck && npm run test && npm run build",
+    "db:seed-sql": "tsx scripts/build-seed-sql.ts"
+  },
+  "devDependencies": {
+    "@fontsource-variable/bricolage-grotesque": "5.3.0",
+    "@playwright/test": "1.56.0",
+    "@tailwindcss/postcss": "4.1.13",
+    "@types/node": "22.18.6",
+    "@types/pg": "8.15.5",
+    "@types/react": "19.1.13",
+    "@types/react-dom": "19.1.9",
+    "tailwindcss": "4.1.13",
+    "tsx": "4.20.5",
+    "typescript": "5.9.3",
+    "vitest": "4.1.11"
+  },
+  "dependencies": {
+    "@fontsource/atkinson-hyperlegible": "5.2.6",
+    "@radix-ui/react-alert-dialog": "1.1.15",
+    "@radix-ui/react-label": "2.1.7",
+    "@radix-ui/react-slider": "1.3.6",
+    "@radix-ui/react-slot": "1.2.3",
+    "@radix-ui/react-tabs": "1.1.13",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "jose": "6.1.0",
+    "lucide-react": "0.544.0",
+    "next": "15.5.27",
+    "pg": "8.16.3",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "server-only": "0.0.1",
+    "tailwind-merge": "3.3.1",
+    "zod": "3.25.76"
+  },
+  "overrides": {
+    "next": {
+      "postcss": "8.5.29"
+    }
+  },
+  "allowScripts": {
+    "@tailwindcss/oxide@4.1.13": true,
+    "esbuild@0.25.12": true
+  }
+}
