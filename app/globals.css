@@ -1,0 +1,153 @@
+@import "tailwindcss";
+@import "@fontsource/atkinson-hyperlegible/400.css";
+@import "@fontsource/atkinson-hyperlegible/700.css";
+@import "@fontsource/atkinson-hyperlegible/400-italic.css";
+@import "@fontsource-variable/bricolage-grotesque/standard.css";
+
+/*
+ * "Lab notebook" palette: graph paper, pen ink, and two highlighters.
+ *   human = you: blue pen, yellow highlighter
+ *   ai    = the reference explanation: magenta pen, pink highlighter
+ * Colour is never the only cue: every side also carries a text label or icon.
+ * All text pairs below meet WCAG AA (4.5:1) on paper and canvas.
+ */
+@theme {
+  --color-canvas: #edf2f6;
+  --color-canvas-deep: #e1e9f0;
+  --color-paper: #ffffff;
+  --color-grid: rgb(39 80 140 / 0.075);
+  --color-line: #d3dde7;
+  --color-line-strong: #a9b8c8;
+  --color-ink: #17223b;
+  --color-ink-soft: #3b4862;
+  --color-ink-muted: #5a6780;
+  --color-focus: #2f47c9;
+
+  --color-human: #2f47c9;
+  --color-human-ink: #24379e;
+  --color-human-soft: #fffbd6;
+  --color-human-hl: #ffee6e;
+  --color-ai: #b0175f;
+  --color-ai-ink: #8e0f4c;
+  --color-ai-soft: #ffeaf4;
+  --color-ai-hl: #ffb8dc;
+
+  --color-ok: #1e7039;
+  --color-ok-soft: #e3f3e6;
+  --color-bad: #c21b2f;
+  --color-bad-soft: #fce8ea;
+  --color-warn: #855800;
+  --color-warn-soft: #fbf0d6;
+
+  /* Crisper corners than the default kit: sheets of paper, not pills. */
+  --radius-xl: 0.625rem;
+  --radius-2xl: 0.75rem;
+  --radius-3xl: 0.875rem;
+
+  --font-sans: "Atkinson Hyperlegible", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Bricolage Grotesque Variable", "Atkinson Hyperlegible", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+@layer base {
+  html {
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    /* Graph paper: a 24px grid, faint enough to read over. */
+    background-color: var(--color-canvas);
+    background-image:
+      linear-gradient(var(--color-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+    background-size: 24px 24px;
+    background-position: -1px -1px;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100dvh;
+  }
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+  h1 {
+    font-stretch: 85%;
+    letter-spacing: -0.02em;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--color-human-hl);
+    color: var(--color-ink);
+  }
+  mark {
+    background: transparent;
+    color: inherit;
+  }
+}
+
+@layer components {
+  /*
+   * Highlighter stroke for quoted evidence. Slightly uneven ends and a band that
+   * sits low on the line, the way a real highlighter lands. Wraps cleanly.
+   */
+  .hl-human,
+  .hl-ai {
+    --hl: var(--color-human-hl);
+    background-image: linear-gradient(
+      100deg,
+      transparent 0.1em,
+      var(--hl) 0.3em,
+      var(--hl) calc(100% - 0.4em),
+      transparent calc(100% - 0.1em)
+    );
+    background-size: 100% 78%;
+    background-position: 0 72%;
+    background-repeat: no-repeat;
+    padding: 0 0.2em;
+    margin: 0 -0.2em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  .hl-ai {
+    --hl: var(--color-ai-hl);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+/* The one orchestrated moment: the hero's highlighter strokes draw in on load. */
+@keyframes swipe {
+  from { background-size: 0% 78%; }
+  to { background-size: 100% 78%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .hl-human,
+  .hl-ai {
+    background: none;
+    text-decoration: underline 2px;
+  }
+}
