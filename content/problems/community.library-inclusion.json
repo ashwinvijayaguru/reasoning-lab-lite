@@ -1,0 +1,134 @@
+{
+  "family": true,
+  "family_id": "community.library-inclusion",
+  "slug": "library-digital-inclusion",
+  "version": 1,
+  "category": "community",
+  "difficulty": "moderate",
+  "est_minutes": 8,
+  "title": "Library digital-inclusion plan",
+  "public": {
+    "summary": "Pick two programmes for a library's small technology grant while meeting residents' needs.",
+    "statement": "The fictional Cedar Falls branch library has a $3,000 grant to improve digital access this year. It can run exactly two of the five proposed programmes below. Choose two that together meet every requirement. If several pairs qualify, any qualifying pair is accepted; explain the trade-offs you considered.",
+    "facts": [
+      "A resident survey found that about 40% of households speak Spanish or Vietnamese at home.",
+      "The same survey found that about 1 in 5 households has no home internet connection.",
+      "Costs are for one year and cannot be split or partly funded."
+    ],
+    "fact_table": {
+      "caption": "Proposed programmes (fictional)",
+      "columns": ["Programme", "Cost", "Usable without home internet", "Support in Spanish or Vietnamese"],
+      "rows": [
+        ["Mobile hotspot lending (10 devices)", "$1,800", "Yes", "No"],
+        ["Evening laptop class with interpreters", "$900", "Yes", "Yes"],
+        ["E-book platform upgrade", "$1,500", "No", "Yes"],
+        ["Two new public computers", "$2,200", "Yes", "No"],
+        ["App-based reminder service", "$400", "No", "Yes"]
+      ]
+    },
+    "constraints": [
+      { "id": "TWO-PROGRAMMES", "text": "Choose exactly two programmes.", "kind": "rule" },
+      { "id": "BUDGET", "text": "The total cost must be $3,000 or less.", "kind": "rule" },
+      { "id": "LANGUAGE", "text": "At least one chosen programme must offer support in Spanish or Vietnamese.", "kind": "rule" },
+      { "id": "NO-HOME-INTERNET", "text": "At least one chosen programme must be usable by residents without home internet.", "kind": "practical" }
+    ],
+    "answer_format": {
+      "kind": "multi_select",
+      "instructions": "Select exactly two programmes.",
+      "min": 2,
+      "max": 2,
+      "options": [
+        { "id": "hotspots", "label": "Mobile hotspot lending (10 devices)" },
+        { "id": "laptop-class", "label": "Evening laptop class with interpreters" },
+        { "id": "ebooks", "label": "E-book platform upgrade" },
+        { "id": "computers", "label": "Two new public computers" },
+        { "id": "reminders", "label": "App-based reminder service" }
+      ]
+    },
+    "explanation_prompt": "Which residents does your plan serve best, and who might it still miss?"
+  },
+  "provenance": {
+    "author": "Reasoning Lab project team",
+    "created": "2026-10-16",
+    "license": "MIT",
+    "origin": "original",
+    "fictional_data": true,
+    "contamination_note": "Original fictional data; not published before 2026-10-16."
+  },
+  "private": {
+    "validator": {
+      "engine": "rules",
+      "attributes": {
+        "hotspots": { "cost": 1800, "offline": true, "multilingual": false },
+        "laptop-class": { "cost": 900, "offline": true, "multilingual": true },
+        "ebooks": { "cost": 1500, "offline": false, "multilingual": true },
+        "computers": { "cost": 2200, "offline": true, "multilingual": false },
+        "reminders": { "cost": 400, "offline": false, "multilingual": true }
+      },
+      "fact_table_binding": { "label_column": 0, "columns": { "cost": 1, "offline": 2, "multilingual": 3 } },
+      "rules": [
+        { "type": "selected_count", "constraint_id": "TWO-PROGRAMMES", "min": 2, "max": 2 },
+        { "type": "selected_sum_at_most", "constraint_id": "BUDGET", "attr": "cost", "max": 3000 },
+        { "type": "selected_any", "constraint_id": "LANGUAGE", "attr": "multilingual", "equals": true },
+        { "type": "selected_any", "constraint_id": "NO-HOME-INTERNET", "attr": "offline", "equals": true }
+      ],
+      "expected_solutions": [],
+      "preferences": ["Reaching more residents or leaving budget for supplies may be preferable but is not graded."]
+    },
+    "validator_version": "community.library-inclusion@1/v1",
+    "rubric": {
+      "version": "rubric-2026-10-a",
+      "dimensions": ["constraints", "alternatives", "assumptions", "trade_offs"],
+      "constraint_cues": {
+        "TWO-PROGRAMMES": ["two programmes", "two programs", "exactly two", "both"],
+        "BUDGET": ["budget", "$3,000", "3000", "3,000", "cost", "total", "afford", "over"],
+        "LANGUAGE": ["spanish", "vietnamese", "language", "interpreter", "translat", "multilingual"],
+        "NO-HOME-INTERNET": ["home internet", "without internet", "no internet", "offline", "connection", "hotspot", "in the library", "in-library", "at the library"]
+      },
+      "edge_case_cues": ["no smartphone", "older", "elderly", "disab", "transport", "can't get to"],
+      "trade_off_cues": ["trade-off", "tradeoff", "instead", "would miss", "leftover", "left over", "versus", "on the other hand"],
+      "anchors": {}
+    },
+    "reviewed_explanation": { "text": "", "accepted_summary": "" },
+    "review": {
+      "author_checked": true,
+      "independent_review": { "status": "pending", "reviewer": null, "date": null },
+      "notes": "Matched variants differ only in the no-home-internet requirement and survey fact."
+    }
+  },
+  "variants": [
+    {
+      "variant": "with-constraint",
+      "id": "community.library-inclusion@1-with-constraint",
+      "expected_solutions": [
+        { "selected": ["hotspots", "laptop-class"] },
+        { "selected": ["hotspots", "reminders"] },
+        { "selected": ["ebooks", "laptop-class"] },
+        { "selected": ["laptop-class", "reminders"] },
+        { "selected": ["computers", "reminders"] }
+      ],
+      "reviewed_explanation": {
+        "text": "Pairs over $3,000 are out (hotspots with e-books or computers, laptop class with computers, e-books with computers). Of the pairs left, e-books plus reminders is the only one where neither programme works without home internet, so it fails that requirement. Five pairs qualify. The laptop class meets both the language and offline requirements by itself, which makes it a flexible anchor.",
+        "accepted_summary": "Any of five qualifying pairs; e-books + reminders fails the no-home-internet requirement."
+      }
+    },
+    {
+      "variant": "without-constraint",
+      "id": "community.library-inclusion@1-without-constraint",
+      "omit_constraints": ["NO-HOME-INTERNET"],
+      "omit_facts": [1],
+      "expected_solutions": [
+        { "selected": ["hotspots", "laptop-class"] },
+        { "selected": ["hotspots", "reminders"] },
+        { "selected": ["ebooks", "laptop-class"] },
+        { "selected": ["ebooks", "reminders"] },
+        { "selected": ["laptop-class", "reminders"] },
+        { "selected": ["computers", "reminders"] }
+      ],
+      "reviewed_explanation": {
+        "text": "Pairs over $3,000 are out. Every remaining pair includes at least one programme with Spanish or Vietnamese support, so six pairs qualify. E-books plus reminders is the second-cheapest pair, but neither programme helps residents without home internet, a need this version does not list.",
+        "accepted_summary": "Any of six pairs within budget that include language support."
+      }
+    }
+  ]
+}

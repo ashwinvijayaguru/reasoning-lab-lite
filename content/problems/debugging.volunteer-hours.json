@@ -1,0 +1,94 @@
+{
+  "id": "debugging.volunteer-hours@1",
+  "family_id": "debugging.volunteer-hours",
+  "slug": "volunteer-hours",
+  "version": 1,
+  "variant": "standard",
+  "category": "debugging",
+  "difficulty": "easy",
+  "est_minutes": 4,
+  "title": "Missing volunteer hours",
+  "public": {
+    "summary": "A volunteer-hours total is always a little too low. Find the faulty line and choose a fix.",
+    "statement": "A tutoring club logs volunteer shifts. Each shift is an object such as { hours: 2 }. Members report that their total hours are always too low by exactly one shift. totalHours() must return the sum of hours across all shifts (0 for an empty list). Identify the faulty line and choose a change that makes the function correct.",
+    "facts": [
+      "shifts is always an array (it may be empty).",
+      "Each shift has a numeric hours property."
+    ],
+    "code": {
+      "language": "javascript",
+      "lines": [
+        "function totalHours(shifts) {",
+        "  let total = 0;",
+        "  for (let i = 1; i < shifts.length; i++) {",
+        "    total += shifts[i].hours;",
+        "  }",
+        "  return total;",
+        "}"
+      ]
+    },
+    "constraints": [
+      { "id": "SUM-ALL", "text": "Every shift's hours must be included in the total.", "kind": "rule" },
+      { "id": "EMPTY-ZERO", "text": "An empty list must return 0 without an error.", "kind": "rule" }
+    ],
+    "answer_format": {
+      "kind": "choice_fields",
+      "instructions": "Choose the faulty line and the fix.",
+      "fields": [
+        { "id": "line", "label": "Which line causes the missing hours?", "options": [ { "id": "l2", "label": "Line 2" }, { "id": "l3", "label": "Line 3" }, { "id": "l4", "label": "Line 4" }, { "id": "l6", "label": "Line 6" } ] },
+        { "id": "fix", "label": "Which change makes the function correct?", "options": [
+          { "id": "a", "label": "Change line 3", "code": "  for (let i = 0; i < shifts.length; i++) {", "patch": { "op": "replace", "line": 3 } },
+          { "id": "b", "label": "Change line 3", "code": "  for (let i = 1; i <= shifts.length; i++) {", "patch": { "op": "replace", "line": 3 } },
+          { "id": "c", "label": "Change line 3", "code": "  for (let i = 0; i <= shifts.length; i++) {", "patch": { "op": "replace", "line": 3 } },
+          { "id": "d", "label": "Replace lines 3–5", "code": "  for (const shift of shifts) total += shift.hours;", "patch": { "op": "replace_range", "line": 3, "to_line": 5 } }
+        ] }
+      ]
+    },
+    "explanation_prompt": "Which shift is being skipped, and how did you check your fix does not read past the end of the list?"
+  },
+  "provenance": {
+    "author": "Reasoning Lab project team",
+    "created": "2026-10-16",
+    "license": "MIT", 
+    "origin": "original",
+    "fictional_data": true,
+    "contamination_note": "Off-by-one loops are a classic teaching bug."
+  },
+  "private": {
+    "validator": {
+      "engine": "answer_key",
+      "accepted": [ { "line": "l3", "fix": "a" }, { "line": "l3", "fix": "d" } ],
+      "harness": {
+        "entry": "totalHours",
+        "helpers": [],
+        "patch_field": "fix",
+        "cases": [
+          { "name": "empty list", "check": "totalHours([]) === 0" },
+          { "name": "single shift", "check": "totalHours([{ hours: 2 }]) === 2" },
+          { "name": "several shifts", "check": "totalHours([{ hours: 2 }, { hours: 3 }, { hours: 1.5 }]) === 6.5" }
+        ]
+      }
+    },
+    "validator_version": "debugging.volunteer-hours@1/v1",
+    "rubric": {
+      "version": "rubric-2026-10-a",
+      "dimensions": ["constraints", "edge_cases", "alternatives", "assumptions"],
+      "constraint_cues": {
+        "SUM-ALL": ["first shift", "index 0", "i = 0", "skips", "skipped", "every shift", "all shifts"],
+        "EMPTY-ZERO": ["empty", "returns 0", "return 0", "no shifts"]
+      },
+      "edge_case_cues": ["empty", "<=", "past the end", "undefined", "out of bounds", "last index", "off-by-one", "off by one"],
+      "trade_off_cues": [],
+      "anchors": {}
+    },
+    "reviewed_explanation": {
+      "text": "The loop on line 3 starts at index 1, so the first shift (index 0) is never added. Starting at 0 (option a) or looping over every shift with for…of (option d) fixes it. Options b and c use <=, which reads one element past the end; shifts[shifts.length] is undefined, so .hours throws a TypeError.",
+      "accepted_summary": "Line 3 with fix a or fix d."
+    },
+    "review": {
+      "author_checked": true,
+      "independent_review": { "status": "pending", "reviewer": null, "date": null },
+      "notes": "Patch outcomes confirmed by running reviewed cases."
+    }
+  }
+}
