@@ -1,6 +1,7 @@
 /**
  * Local PostgreSQL for development and tests
- * using trust auth bound to localhost only.
+ * using trust auth
+ * bound to localhost only.
  *
  *   node scripts/local-db.mjs start   # create (first time) and start; create app/test databases
  *   node scripts/local-db.mjs stop
