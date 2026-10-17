@@ -1,0 +1,89 @@
+{
+  "id": "logic.garden-plots@1",
+  "family_id": "logic.garden-plots",
+  "slug": "garden-plots",
+  "version": 1,
+  "variant": "standard",
+  "category": "logic",
+  "difficulty": "moderate",
+  "est_minutes": 8,
+  "title": "Community garden plots",
+  "public": {
+    "summary": "Five plots in a row, four crops, and one plot left to rest. Place everything so every rule holds.",
+    "statement": "A school community garden has five plots in a single row, numbered 1 to 5 from the gate. This season the team will plant tomatoes, beans, squash, and herbs — one crop per plot — and leave exactly one plot empty so its soil can rest. Decide what goes in each plot. Any arrangement that follows every rule is accepted.",
+    "facts": [
+      "Plots 1 and 5 are the two end plots; squash vines can spill over the edge there.",
+      "Herbs are watered by hand from a can the volunteers rest on the neighbouring empty plot."
+    ],
+    "constraints": [
+      { "id": "ONE-PER-PLOT", "text": "Each plot holds exactly one crop or is the single empty plot; each crop is planted once.", "kind": "rule" },
+      { "id": "SQUASH-END", "text": "Squash must be in an end plot (plot 1 or plot 5).", "kind": "rule" },
+      { "id": "BEANS-TOMATO-APART", "text": "Beans and tomatoes must not be in neighbouring plots.", "kind": "rule" },
+      { "id": "HERBS-THEN-EMPTY", "text": "The empty plot must be immediately after the herbs plot (herbs in plot n, empty in plot n+1).", "kind": "rule" },
+      { "id": "TOMATO-BEFORE-HERBS", "text": "Tomatoes must be in a lower-numbered plot than herbs.", "kind": "rule" }
+    ],
+    "answer_format": {
+      "kind": "choice_fields",
+      "instructions": "Choose what goes in each plot.",
+      "fields": [
+        { "id": "p1", "label": "Plot 1", "options": [ { "id": "tomatoes", "label": "Tomatoes" }, { "id": "beans", "label": "Beans" }, { "id": "squash", "label": "Squash" }, { "id": "herbs", "label": "Herbs" }, { "id": "empty", "label": "Empty (resting)" } ] },
+        { "id": "p2", "label": "Plot 2", "options": [ { "id": "tomatoes", "label": "Tomatoes" }, { "id": "beans", "label": "Beans" }, { "id": "squash", "label": "Squash" }, { "id": "herbs", "label": "Herbs" }, { "id": "empty", "label": "Empty (resting)" } ] },
+        { "id": "p3", "label": "Plot 3", "options": [ { "id": "tomatoes", "label": "Tomatoes" }, { "id": "beans", "label": "Beans" }, { "id": "squash", "label": "Squash" }, { "id": "herbs", "label": "Herbs" }, { "id": "empty", "label": "Empty (resting)" } ] },
+        { "id": "p4", "label": "Plot 4", "options": [ { "id": "tomatoes", "label": "Tomatoes" }, { "id": "beans", "label": "Beans" }, { "id": "squash", "label": "Squash" }, { "id": "herbs", "label": "Herbs" }, { "id": "empty", "label": "Empty (resting)" } ] },
+        { "id": "p5", "label": "Plot 5", "options": [ { "id": "tomatoes", "label": "Tomatoes" }, { "id": "beans", "label": "Beans" }, { "id": "squash", "label": "Squash" }, { "id": "herbs", "label": "Herbs" }, { "id": "empty", "label": "Empty (resting)" } ] }
+      ]
+    },
+    "explanation_prompt": "Which rule did you place first, and how did the others follow? Did you check other arrangements?"
+  },
+  "provenance": {
+    "author": "Reasoning Lab project team",
+    "created": "2026-10-16",
+    "license": "MIT", 
+    "origin": "original",
+    "fictional_data": true,
+    "contamination_note": "Original task; row-placement puzzles are a common genre."
+  },
+  "private": {
+    "validator": {
+      "engine": "rules",
+      "attributes": {},
+      "rules": [
+        { "type": "all_fields_answered", "constraint_id": "ONE-PER-PLOT" },
+        { "type": "distinct", "constraint_id": "ONE-PER-PLOT" },
+        { "type": "value_in_fields", "constraint_id": "SQUASH-END", "value": "squash", "fields": ["p1", "p5"] },
+        { "type": "not_adjacent", "constraint_id": "BEANS-TOMATO-APART", "a": "beans", "b": "tomatoes", "slots": ["p1", "p2", "p3", "p4", "p5"] },
+        { "type": "immediately_before", "constraint_id": "HERBS-THEN-EMPTY", "a": "herbs", "b": "empty", "slots": ["p1", "p2", "p3", "p4", "p5"] },
+        { "type": "before", "constraint_id": "TOMATO-BEFORE-HERBS", "a": "tomatoes", "b": "herbs", "slots": ["p1", "p2", "p3", "p4", "p5"] }
+      ],
+      "expected_solutions": [
+        { "fields": { "p1": "tomatoes", "p2": "herbs", "p3": "empty", "p4": "beans", "p5": "squash" } },
+        { "fields": { "p1": "squash", "p2": "tomatoes", "p3": "herbs", "p4": "empty", "p5": "beans" } }
+      ],
+      "preferences": []
+    },
+    "validator_version": "logic.garden-plots@1/v1",
+    "rubric": {
+      "version": "rubric-2026-10-a",
+      "dimensions": ["constraints", "alternatives", "assumptions"],
+      "constraint_cues": {
+        "ONE-PER-PLOT": ["one crop", "one plot", "exactly one", "each plot"],
+        "SQUASH-END": ["squash", "end plot", "plot 1 or", "or plot 5", "an end"],
+        "BEANS-TOMATO-APART": ["beans and tomatoes", "next to", "neighbour", "neighbor", "adjacent", "beans can't", "beans cannot"],
+        "HERBS-THEN-EMPTY": ["herbs then", "after the herbs", "after herbs", "right after", "empty after", "immediately after", "herbs, empty", "herbs and then"],
+        "TOMATO-BEFORE-HERBS": ["tomatoes before", "tomatoes lower", "before herbs", "before the herbs", "lower-numbered"]
+      },
+      "edge_case_cues": [],
+      "trade_off_cues": [],
+      "anchors": {}
+    },
+    "reviewed_explanation": {
+      "text": "Herbs and the empty plot form a pair (herbs, empty), and tomatoes must be somewhere before herbs. Squash takes an end. If squash is in plot 5, the pair and tomatoes fit in plots 1–4 with beans left over; beans cannot sit next to tomatoes, which forces tomatoes 1, herbs 2, empty 3, beans 4. If squash is in plot 1, tomatoes go in 2, herbs 3, empty 4, and beans 5 (not next to tomatoes). Both arrangements follow every rule.",
+      "accepted_summary": "Two valid layouts: T-H-E-B-S or S-T-H-E-B (plots 1→5)."
+    },
+    "review": {
+      "author_checked": true,
+      "independent_review": { "status": "pending", "reviewer": null, "date": null },
+      "notes": "Solution set confirmed by enumeration of all 3,125 field combinations."
+    }
+  }
+}

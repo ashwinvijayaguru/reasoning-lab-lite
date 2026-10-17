@@ -1,0 +1,101 @@
+{
+  "id": "debugging.earliest-shift@1",
+  "family_id": "debugging.earliest-shift",
+  "slug": "earliest-shift",
+  "version": 1,
+  "variant": "standard",
+  "category": "debugging",
+  "difficulty": "moderate",
+  "est_minutes": 7,
+  "title": "The 1 p.m. shift that came first",
+  "public": {
+    "summary": "A function that finds the earliest shift sometimes picks an afternoon shift. Find the cause and choose a fix.",
+    "statement": "A food-bank rota stores shift start times as text on a 24-hour clock, such as \"9:30\" or \"13:00\". earliestShift() should return the shift with the earliest start time. With shifts starting at \"9:30\" and \"13:00\", it returns the 13:00 shift. Identify the faulty line and choose a change that makes the function correct for any valid times.",
+    "facts": [
+      "Times look like \"H:MM\" or \"HH:MM\"; hours may have one or two digits.",
+      "shifts always contains at least one shift.",
+      "The helper toMinutes(\"13:05\") returns 785 (13 × 60 + 5)."
+    ],
+    "code": {
+      "language": "javascript",
+      "lines": [
+        "const toMinutes = (t) => { const [h, m] = t.split(\":\").map(Number); return h * 60 + m; };",
+        "",
+        "function earliestShift(shifts) {",
+        "  let earliest = shifts[0];",
+        "  for (const shift of shifts) {",
+        "    if (shift.start < earliest.start) {",
+        "      earliest = shift;",
+        "    }",
+        "  }",
+        "  return earliest;",
+        "}"
+      ]
+    },
+    "constraints": [
+      { "id": "TRUE-EARLIEST", "text": "Return the shift whose start time is earliest in the day.", "kind": "rule" },
+      { "id": "MIXED-DIGITS", "text": "Must work when one-digit and two-digit hours are mixed (e.g. \"9:30\" and \"13:00\").", "kind": "rule" }
+    ],
+    "answer_format": {
+      "kind": "choice_fields",
+      "instructions": "Choose the faulty line and the fix.",
+      "fields": [
+        { "id": "line", "label": "Which line makes the wrong choice?", "options": [ { "id": "l4", "label": "Line 4" }, { "id": "l5", "label": "Line 5" }, { "id": "l6", "label": "Line 6" }, { "id": "l10", "label": "Line 10" } ] },
+        { "id": "fix", "label": "Which change makes the function correct?", "options": [
+          { "id": "a", "label": "Change line 6", "code": "    if (toMinutes(shift.start) < toMinutes(earliest.start)) {", "patch": { "op": "replace", "line": 6 } },
+          { "id": "b", "label": "Change line 6", "code": "    if (shift.start.length < earliest.start.length) {", "patch": { "op": "replace", "line": 6 } },
+          { "id": "c", "label": "Change line 6", "code": "    if (shift.start.padStart(5, \"0\") < earliest.start.padStart(5, \"0\")) {", "patch": { "op": "replace", "line": 6 } },
+          { "id": "d", "label": "Change line 6", "code": "    if (Number(shift.start) < Number(earliest.start)) {", "patch": { "op": "replace", "line": 6 } }
+        ] }
+      ]
+    },
+    "explanation_prompt": "Why does \"13:00\" look earlier than \"9:30\" to the original code? What inputs did you use to check your fix?"
+  },
+  "provenance": {
+    "author": "Reasoning Lab project team",
+    "created": "2026-10-16",
+    "license": "MIT", 
+    "origin": "original",
+    "fictional_data": true,
+    "contamination_note": "String comparison of times is a known bug pattern; option c is a less obvious but valid alternative."
+  },
+  "private": {
+    "validator": {
+      "engine": "answer_key",
+      "accepted": [ { "line": "l6", "fix": "a" }, { "line": "l6", "fix": "c" } ],
+      "harness": {
+        "entry": "earliestShift",
+        "helpers": [],
+        "patch_field": "fix",
+        "cases": [
+          { "name": "mixed digits", "check": "earliestShift([{ start: \"9:30\" }, { start: \"13:00\" }, { start: \"8:15\" }]).start === \"8:15\"" },
+          { "name": "afternoon first in list", "check": "earliestShift([{ start: \"13:00\" }, { start: \"9:30\" }]).start === \"9:30\"" },
+          { "name": "same digit count", "check": "earliestShift([{ start: \"10:00\" }, { start: \"09:45\" }]).start === \"09:45\"" },
+          { "name": "single-digit vs noon", "check": "earliestShift([{ start: \"12:00\" }, { start: \"7:05\" }]).start === \"7:05\"" },
+          { "name": "single shift", "check": "earliestShift([{ start: \"14:20\" }]).start === \"14:20\"" }
+        ]
+      }
+    },
+    "validator_version": "debugging.earliest-shift@1/v1",
+    "rubric": {
+      "version": "rubric-2026-10-a",
+      "dimensions": ["constraints", "edge_cases", "alternatives", "assumptions"],
+      "constraint_cues": {
+        "TRUE-EARLIEST": ["minutes", "tominutes", "numeric", "as numbers", "convert"],
+        "MIXED-DIGITS": ["character", "alphabetical", "lexicographic", "string comparison", "compares strings", "text comparison", "\"1\" < \"9\"", "one digit", "two digit", "pad", "leading zero"]
+      },
+      "edge_case_cues": ["leading zero", "09", "same time", "tie", "midnight", "0:00", "single shift"],
+      "trade_off_cues": [],
+      "anchors": {}
+    },
+    "reviewed_explanation": {
+      "text": "Line 6 compares the times as text, character by character, so \"13:00\" < \"9:30\" is true because \"1\" comes before \"9\". Converting both to minutes (option a) fixes it. Padding both to five characters with leading zeros (option c) also works, because \"09:30\" and \"13:00\" then compare correctly as text. Comparing lengths (option b) ignores the actual time, and Number(\"9:30\") is NaN (option d), so every comparison is false.",
+      "accepted_summary": "Line 6 with fix a or fix c."
+    },
+    "review": {
+      "author_checked": true,
+      "independent_review": { "status": "pending", "reviewer": null, "date": null },
+      "notes": "Patch outcomes confirmed by running reviewed cases."
+    }
+  }
+}
