@@ -1,0 +1,96 @@
+{
+  "id": "debugging.average-empty@1",
+  "family_id": "debugging.average-empty",
+  "slug": "average-empty-list",
+  "version": 1,
+  "variant": "standard",
+  "category": "debugging",
+  "difficulty": "easy",
+  "est_minutes": 4,
+  "title": "Average of an empty list",
+  "public": {
+    "summary": "A quiz-score average shows “NaN” for new students. Find the faulty line and pick a fix.",
+    "statement": "A class dashboard shows each student's average quiz score. For students who have not taken any quizzes yet, the dashboard displays “NaN”. The specification says average() must return null when the list is empty, and the ordinary average otherwise. Identify the line that produces the wrong result for an empty list, then choose a change that makes the function meet the specification.",
+    "facts": [
+      "scores is always an array of numbers (it may be empty).",
+      "In JavaScript, 0 / 0 evaluates to NaN; it does not throw an error."
+    ],
+    "code": {
+      "language": "javascript",
+      "lines": [
+        "function average(scores) {",
+        "  let total = 0;",
+        "  for (const s of scores) {",
+        "    total += s;",
+        "  }",
+        "  return total / scores.length;",
+        "}"
+      ]
+    },
+    "constraints": [
+      { "id": "EMPTY-RETURNS-NULL", "text": "An empty list must return null.", "kind": "rule" },
+      { "id": "NORMAL-AVERAGE", "text": "A non-empty list must still return the ordinary average (for example [4, 8] → 6).", "kind": "rule" }
+    ],
+    "answer_format": {
+      "kind": "choice_fields",
+      "instructions": "Choose the faulty line and the fix.",
+      "fields": [
+        { "id": "line", "label": "Which line produces the wrong result for an empty list?", "options": [ { "id": "l2", "label": "Line 2" }, { "id": "l3", "label": "Line 3" }, { "id": "l4", "label": "Line 4" }, { "id": "l6", "label": "Line 6" } ] },
+        { "id": "fix", "label": "Which change meets the specification?", "options": [
+          { "id": "a", "label": "Add a guard before line 2", "code": "  if (scores.length === 0) return null;", "patch": { "op": "insert_before", "line": 2 } },
+          { "id": "b", "label": "Change line 6", "code": "  return total / (scores.length + 1);", "patch": { "op": "replace", "line": 6 } },
+          { "id": "c", "label": "Change line 6", "code": "  return scores.length > 0 ? total / scores.length : null;", "patch": { "op": "replace", "line": 6 } },
+          { "id": "d", "label": "Change line 2", "code": "  let total = 1;", "patch": { "op": "replace", "line": 2 } }
+        ] }
+      ]
+    },
+    "explanation_prompt": "Why does the empty case fail? How do you know your fix keeps normal averages correct?"
+  },
+  "provenance": {
+    "author": "Reasoning Lab project team",
+    "created": "2026-10-16",
+    "license": "MIT", 
+    "origin": "original",
+    "fictional_data": true,
+    "contamination_note": "Empty-list division is a very common teaching bug; models have almost certainly seen close variants."
+  },
+  "private": {
+    "validator": {
+      "engine": "answer_key",
+      "accepted": [ { "line": "l6", "fix": "a" }, { "line": "l6", "fix": "c" } ],
+      "harness": {
+        "entry": "average",
+        "helpers": [],
+        "patch_field": "fix",
+        "cases": [
+          { "name": "empty list returns null", "check": "average([]) === null" },
+          { "name": "two values", "check": "average([4, 8]) === 6" },
+          { "name": "one value", "check": "average([5]) === 5" },
+          { "name": "negatives", "check": "average([-2, 2]) === 0" },
+          { "name": "fractional", "check": "average([1, 2]) === 1.5" }
+        ]
+      }
+    },
+    "validator_version": "debugging.average-empty@1/v1",
+    "rubric": {
+      "version": "rubric-2026-10-a",
+      "dimensions": ["constraints", "edge_cases", "alternatives", "assumptions"],
+      "constraint_cues": {
+        "EMPTY-RETURNS-NULL": ["return null", "returns null", "null", "empty"],
+        "NORMAL-AVERAGE": ["still", "normal", "non-empty", "other cases", "[4, 8]", "regular average", "ordinary average"]
+      },
+      "edge_case_cues": ["empty", "no quizzes", "length is 0", "length === 0", "zero", "0 / 0", "nan"],
+      "trade_off_cues": [],
+      "anchors": { "edge_cases": "Credit for naming the empty-list case explicitly." }
+    },
+    "reviewed_explanation": {
+      "text": "With an empty list, total stays 0 and scores.length is 0, so line 6 computes 0 / 0, which is NaN in JavaScript rather than an error. Either add an early return of null when the list is empty (option a) or make line 6 return null when the length is 0 (option c). Both keep ordinary averages unchanged. Option b changes every average, and option d adds 1 to every total.",
+      "accepted_summary": "Line 6 with fix a or fix c."
+    },
+    "review": {
+      "author_checked": true,
+      "independent_review": { "status": "pending", "reviewer": null, "date": null },
+      "notes": "Patch outcomes confirmed by running each patched function against the reviewed cases in tests (author code only; participant code is never executed)."
+    }
+  }
+}
