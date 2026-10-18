@@ -16,7 +16,7 @@ export default function Home() {
     <div className="mx-auto max-w-6xl px-4 sm:px-6">
       <section className="grid gap-10 py-14 sm:py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
         <div>
-          <h1 className="text-5xl text-ink sm:text-5xl">
+          <h1 className="text-5xl leading-[1.12] text-ink">
             Think first.
             <br />
             Compare second.
@@ -88,7 +88,7 @@ export default function Home() {
         </div>
         <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {CATEGORIES.map((c) => (
-            <li key={c.id} className={`flex gap-4 rounded-2xl border border-line p-5 shadow-[0_2px_0_var(--color-line)] ${c.status === "available" ? "bg-paper" : "bg-canvas-deep/60"}`}>
+            <li key={c.id} className={`flex gap-4 rounded-2xl border p-5 ${c.status === "available" ? "border-line bg-paper shadow-[0_2px_0_var(--color-line)]" : "border-dashed border-line-strong bg-unavailable"}`}>
               <CategoryIcon category={c.id} />
               <div>
                 <div className="flex flex-wrap items-center gap-2">
