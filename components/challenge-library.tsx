@@ -132,7 +132,7 @@ export function ChallengeLibrary({ families, categories }: { families: Family[];
           <p className="mt-1 text-sm text-ink-soft">These categories are planned but not open yet — they need their own answer checkers before anyone can try them.</p>
           <ul className="mt-4 grid gap-4 sm:grid-cols-3">
             {comingSoon.map((c) => (
-              <li key={c.id} className="flex gap-3 rounded-2xl border border-line bg-canvas-deep/60 p-5">
+              <li key={c.id} className="flex gap-3 rounded-2xl border border-dashed border-line-strong bg-unavailable p-5">
                 <CategoryIcon category={c.id} />
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
