@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import "./globals.css";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export const metadata: Metadata = {
   title: { default: "Reasoning Lab — Think first. Compare second.", template: "%s · Reasoning Lab" },
@@ -16,11 +17,17 @@ const NAV = [
   { href: "/privacy", label: "Privacy" },
 ];
 
+/** Runs before the page paints: saved choice, otherwise the device's light/dark setting. */
+const THEME_SCRIPT = `try{var t=localStorage.getItem("reasoning-lab-theme");if(t!=="light"&&t!=="dark"){t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.dataset.theme=t}catch(e){}`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body className="flex min-h-dvh flex-col">
-        <a href="#main" className="sr-only z-50 rounded-md bg-ink px-4 py-2 text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4">
+        <a href="#main" className="sr-only z-50 rounded-md bg-ink px-4 py-2 text-paper focus:not-sr-only focus:fixed focus:left-4 focus:top-4">
           Skip to content
         </a>
         <header className="border-b border-line bg-paper">
@@ -35,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   {n.label}
                 </Link>
               ))}
+              <ThemeToggle />
             </nav>
           </div>
         </header>
@@ -58,7 +66,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 function LogoMark() {
   return (
     <svg aria-hidden viewBox="0 0 32 32" className="size-8 shrink-0">
-      <rect x="1" y="1" width="30" height="30" rx="6" fill="#17223b" />
+      <rect x="1" y="1" width="30" height="30" rx="6" fill="#17223b" style={{ stroke: "var(--color-line-strong)" }} strokeWidth="1" />
       <path d="M7 12.5 L24.5 10.5 L25 15 L7.5 17 Z" fill="#ffee6e" />
       <path d="M7.5 19 L25 17.5 L25.5 22 L8 23.5 Z" fill="#ffb8dc" />
     </svg>
