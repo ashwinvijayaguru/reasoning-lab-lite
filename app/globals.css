@@ -37,6 +37,8 @@
   --color-canvas: #edf2f6;
   --color-canvas-deep: #e1e9f0;
   --color-paper: #ffffff;
+  /* Cards for things that aren't available yet (the "coming soon" categories). */
+  --color-unavailable: #e6edf3;
   --color-grid: rgb(39 80 140 / 0.075);
   --color-line: #d3dde7;
   --color-line-strong: #a9b8c8;
@@ -81,6 +83,7 @@
   --color-canvas: #0f1522;
   --color-canvas-deep: #18213a;
   --color-paper: #172034;
+  --color-unavailable: #0b101a;
   --color-grid: rgb(170 195 235 / 0.06);
   --color-line: #2a3652;
   --color-line-strong: #43516f;
