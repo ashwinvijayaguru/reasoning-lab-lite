@@ -71,6 +71,41 @@
   --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 }
 
+/*
+ * Dark mode: the same tokens, re-coloured. Every screen uses these tokens, so the whole
+ * app switches at once. All text pairs meet WCAG AA, as in light mode. Highlighters
+ * become translucent so light text stays readable on top of them.
+ */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-canvas: #0f1522;
+  --color-canvas-deep: #18213a;
+  --color-paper: #172034;
+  --color-grid: rgb(170 195 235 / 0.06);
+  --color-line: #2a3652;
+  --color-line-strong: #43516f;
+  --color-ink: #e7edf6;
+  --color-ink-soft: #b9c4d8;
+  --color-ink-muted: #93a0b9;
+  --color-focus: #93a6ff;
+
+  --color-human: #93a6ff;
+  --color-human-ink: #b4c1ff;
+  --color-human-soft: #2a2914;
+  --color-human-hl: rgb(255 226 70 / 0.32);
+  --color-ai: #ff86bf;
+  --color-ai-ink: #ffa6cf;
+  --color-ai-soft: #331d2b;
+  --color-ai-hl: rgb(255 110 180 / 0.34);
+
+  --color-ok: #6fd99a;
+  --color-ok-soft: #16301f;
+  --color-bad: #ff8a8a;
+  --color-bad-soft: #3a1d21;
+  --color-warn: #f2bd5c;
+  --color-warn-soft: #33280f;
+}
+
 @layer base {
   html {
     background: var(--color-canvas);
@@ -95,8 +130,16 @@
   h1:not(.font-sans), h2:not(.font-sans), h3:not(.font-sans), .font-display {
     font-family: var(--font-display);
     font-weight: 700;
-    letter-spacing: -0.01em;
+    /* Natural spacing: this geometric font looks uneven when letters are pulled together,
+       and its joined "fi"/"fl" shapes hide the dot on the i, so keep letters separate. */
+    letter-spacing: 0;
+    font-variant-ligatures: no-common-ligatures;
+    font-kerning: normal;
     line-height: 1.15;
+  }
+  /* Big display text needs a touch more air between letters in this font. */
+  h1:not(.font-sans) {
+    letter-spacing: 0.02em;
   }
   :focus-visible {
     outline: 3px solid var(--color-focus);
