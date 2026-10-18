@@ -8,11 +8,11 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-ink text-white shadow-[inset_0_-3px_0_rgb(0_0_0/0.35)] hover:bg-ink-soft",
-        human: "bg-human text-white shadow-[inset_0_-3px_0_rgb(0_0_0/0.3)] hover:bg-human-ink",
+        default: "bg-ink text-paper shadow-[inset_0_-3px_0_rgb(0_0_0/0.35)] hover:bg-ink-soft",
+        human: "bg-human text-paper shadow-[inset_0_-3px_0_rgb(0_0_0/0.3)] hover:bg-human-ink",
         outline: "border border-line-strong bg-paper text-ink shadow-[inset_0_-2px_0_var(--color-line)] hover:border-ink-muted",
         ghost: "text-ink hover:bg-canvas-deep",
-        danger: "bg-bad text-white shadow-[inset_0_-3px_0_rgb(0_0_0/0.3)] hover:bg-bad/90",
+        danger: "bg-bad text-paper shadow-[inset_0_-3px_0_rgb(0_0_0/0.3)] hover:bg-bad/90",
         link: "text-ink underline underline-offset-4 hover:text-human rounded-sm",
       },
       size: { default: "h-11 px-5", sm: "h-9 px-4 text-[13px]", lg: "h-12 px-7 text-base", icon: "size-10" },
