@@ -1,8 +1,30 @@
 @import "tailwindcss";
-@import "@fontsource/atkinson-hyperlegible/400.css";
-@import "@fontsource/atkinson-hyperlegible/700.css";
-@import "@fontsource/atkinson-hyperlegible/400-italic.css";
-@import "@fontsource-variable/bricolage-grotesque/standard.css";
+
+/*
+ * Fonts
+ *   Titles: URW Gothic L, a geometric sans-serif. It's installed on most Linux machines
+ *           but not on Windows or macOS, so the app also ships TeX Gyre Adventor
+ *           (public/fonts), a free font made from URW Gothic L, and the titles look the
+ *           same everywhere.
+ *   Body:   Arial. Built into Windows and macOS; Liberation Sans is the same-width
+ *           stand-in on Linux.
+ */
+@font-face {
+  font-family: "Gothic";
+  src: local("URW Gothic L Book"), local("URWGothicL-Book"), local("URW Gothic Book"), local("URWGothic-Book"),
+    url("/fonts/tex-gyre-adventor-regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gothic";
+  src: local("URW Gothic L Demi"), local("URWGothicL-Demi"), local("URW Gothic Demi"), local("URWGothic-Demi"),
+    url("/fonts/tex-gyre-adventor-bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600 700;
+  font-display: swap;
+}
 
 /*
  * "Lab notebook" palette: graph paper, pen ink, and two highlighters.
@@ -44,8 +66,8 @@
   --radius-2xl: 0.75rem;
   --radius-3xl: 0.875rem;
 
-  --font-sans: "Atkinson Hyperlegible", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: "Bricolage Grotesque Variable", "Atkinson Hyperlegible", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: Arial, "Liberation Sans", Helvetica, sans-serif;
+  --font-display: "Gothic", "URW Gothic L", "Avant Garde", "Century Gothic", Arial, sans-serif;
   --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 }
 
@@ -68,16 +90,13 @@
     line-height: 1.6;
     min-height: 100dvh;
   }
-  h1, h2, h3 {
+  /* Titles in URW Gothic L. Headings that a page marks as body text (class "font-sans",
+     such as "Facts") keep the Arial style. */
+  h1:not(.font-sans), h2:not(.font-sans), h3:not(.font-sans), .font-display {
     font-family: var(--font-display);
-    font-optical-sizing: auto;
     font-weight: 700;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     line-height: 1.15;
-  }
-  h1 {
-    font-stretch: 85%;
-    letter-spacing: -0.02em;
   }
   :focus-visible {
     outline: 3px solid var(--color-focus);
