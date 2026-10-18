@@ -19,7 +19,7 @@ const out: string[] = [
 ];
 for (const s of seeds) {
   out.push(
-    'insert into problem_versions (id, family_id, slug, version, variant, category, difficulty, est_minutes, title, public_payload, provenance, content_hash) values (${[
+    `insert into problem_versions (id, family_id, slug, version, variant, category, difficulty, est_minutes, title, public_payload, provenance, content_hash) values (${[
       s.id, s.family_id, s.slug, s.version, s.variant, s.category, s.difficulty, s.est_minutes, s.title,
     ].map(lit).join(", ")}, ${lit(s.public)}::jsonb, ${lit(s.provenance)}::jsonb, ${lit(contentHash(s))}) on conflict (id) do nothing;`,
     `insert into problem_keys (problem_version_id, validator, validator_version, rubric, rubric_version, reviewed_explanation, review, reference_output) values (${lit(s.id)}, ${lit(s.private.validator)}::jsonb, ${lit(s.private.validator_version)}, ${lit(s.private.rubric)}::jsonb, ${lit(s.private.rubric.version)}, ${lit(s.private.reviewed_explanation)}::jsonb, ${lit(s.private.review)}::jsonb, ${lit(refs.get(s.id))}::jsonb) on conflict (problem_version_id) do nothing;`,
